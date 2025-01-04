@@ -3,7 +3,7 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./react-crud-web-api-master # Chemin mis à jour
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -14,7 +14,7 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./nodejs-express-sequelize-mysql-master # Chemin mis à jour
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -30,6 +30,7 @@ services:
 
   db:
     image: mysql:5.7
+    container_name: mysql # Nom du conteneur MySQL
     ports:
       - "3306:3306"
     environment:
@@ -48,3 +49,4 @@ networks:
 
 volumes:
   db_data:
+
