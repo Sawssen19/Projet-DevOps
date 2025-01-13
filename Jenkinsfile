@@ -7,7 +7,7 @@ pipeline {
         environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "192.168.1.20:8083" // Adresse et port de Nexus
+        NEXUS_URL = "192.168.1.20:8084" // Adresse et port de Nexus
         NEXUS_REPOSITORY = "docker-hosted" // Nom du repository Nexus
         NEXUS_CREDENTIAL_ID = "nexus-user-credentials" // ID des credentials Nexus
     }
