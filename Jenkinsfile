@@ -7,9 +7,11 @@ pipeline {
         environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "http://192.168.1.20:8081"  // Correction ici : enlever le double "http://"
-        NEXUS_REPOSITORY = "docker-hosted"
-        NEXUS_CREDENTIAL_ID = "nexus-user-credentials"
+        NEXUS_URL = "http://192.168.1.20:8081"  // URL de votre Nexus
+        NEXUS_REPOSITORY = "docker-hosted"     // Le repository Docker dans Nexus
+        NEXUS_CREDENTIAL_ID = "nexus-user-credentials" // L'ID des credentials Nexus
+        FRONTEND_IMAGE = "react-frontend"
+        BACKEND_IMAGE = "node-backend"
     }
     
     stages {
@@ -44,12 +46,13 @@ pipeline {
             }
         }
 
-                stage("Push Frontend Image to Nexus") {
+        stage("Push Frontend Image to Nexus") {
             steps {
                 script {
-                    docker.withRegistry("http://${NEXUS_URL}", "${NEXUS_CREDENTIAL_ID}") {
-                        sh "docker tag react-frontend:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/react-frontend:latest"
-                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/react-frontend:latest"
+                    // Connexion à Nexus Docker Registry
+                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
+                        sh "docker tag ${FRONTEND_IMAGE}:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
+                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
                     }
                 }
             }
@@ -58,9 +61,10 @@ pipeline {
         stage("Push Backend Image to Nexus") {
             steps {
                 script {
-                    docker.withRegistry("http://${NEXUS_URL}", "${NEXUS_CREDENTIAL_ID}") {
-                        sh "docker tag node-backend:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/node-backend:latest"
-                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/node-backend:latest"
+                    // Connexion à Nexus Docker Registry
+                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
+                        sh "docker tag ${BACKEND_IMAGE}:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
+                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
                     }
                 }
             }
