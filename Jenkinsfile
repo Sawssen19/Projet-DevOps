@@ -3,6 +3,15 @@ pipeline {
     tools {
         nodejs 'nodejs' // Configure Node.js dans Jenkins
     }
+
+        environment {
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "192.168.1.20:8083" // Adresse et port de Nexus
+        NEXUS_REPOSITORY = "docker-hosted" // Nom du repository Nexus
+        NEXUS_CREDENTIAL_ID = "nexus-user-credentials" // ID des credentials Nexus
+    }
+    
     stages {
         stage("Clean up") {
             steps {
@@ -34,6 +43,29 @@ pipeline {
                 }
             }
         }
+
+                stage("Push Frontend Image to Nexus") {
+            steps {
+                script {
+                    docker.withRegistry("http://${NEXUS_URL}", "${NEXUS_CREDENTIAL_ID}") {
+                        sh "docker tag react-frontend:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/react-frontend:latest"
+                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/react-frontend:latest"
+                    }
+                }
+            }
+        }
+
+        stage("Push Backend Image to Nexus") {
+            steps {
+                script {
+                    docker.withRegistry("http://${NEXUS_URL}", "${NEXUS_CREDENTIAL_ID}") {
+                        sh "docker tag node-backend:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/node-backend:latest"
+                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/node-backend:latest"
+                    }
+                }
+            }
+        }
+
 
         stage("Run Docker Compose") {
             steps {
