@@ -2,8 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs 'nodejs' // Configure Node.js dans Jenkins
-        // Ajouter une version de Docker si nécessaire
-        docker 'docker' // Si tu utilises un outil Docker spécifique dans Jenkins
+       
     }
 
     environment {
