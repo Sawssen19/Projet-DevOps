@@ -50,9 +50,9 @@ pipeline {
             steps {
                 script {
                     // Connexion à Nexus Docker Registry
-                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
-                        sh "docker tag ${FRONTEND_IMAGE}:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
-                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
+                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "http://192.168.1.20:8083"]) {
+                        sh "docker tag ${FRONTEND_IMAGE}:latest http://192.168.1.20:8083/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
+                        sh "docker push http://192.168.1.20:8083/${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
                     }
                 }
             }
@@ -62,9 +62,9 @@ pipeline {
             steps {
                 script {
                     // Connexion à Nexus Docker Registry
-                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
-                        sh "docker tag ${BACKEND_IMAGE}:latest ${NEXUS_URL}/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
-                        sh "docker push ${NEXUS_URL}/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
+                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "http://192.168.1.20:8083"]) {
+                        sh "docker tag ${BACKEND_IMAGE}:latest http://192.168.1.20:8083/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
+                        sh "docker push http://192.168.1.20:8083/${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
                     }
                 }
             }
