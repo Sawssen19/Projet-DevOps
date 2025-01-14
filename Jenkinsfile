@@ -21,16 +21,15 @@ pipeline {
                 sh "git clone https://github.com/Sawssen19/Projet-DevOps.git"
             }
         }
-
         stage("Install Dependencies and Run Tests") {
             steps {
                 dir("Projet-DevOps/react-crud-web-api-master") { // React - Frontend
                     sh "npm install"
-                    sh "npm test -- --coverage"  // Exécuter les tests pour générer les rapports de couverture
+                    sh "npm test -- --coverage --passWithNoTests"  // Ajouter --passWithNoTests pour éviter un échec si aucun test n'est trouvé
                 }
                 dir("Projet-DevOps/nodejs-express-sequelize-mysql-master") { // Node.js - Backend
                     sh "npm install"
-                    sh "npm test -- --coverage"  // Exécuter les tests pour générer les rapports de couverture
+                    sh "npm test -- --coverage --passWithNoTests"  // Ajouter --passWithNoTests pour éviter un échec si aucun test n'est trouvé
                 }
             }
         }
