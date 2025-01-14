@@ -5,15 +5,7 @@ pipeline {
        
     }
 
-    environment {
-        NEXUS_VERSION = "nexus3"
-        NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "http://192.168.1.20:8083"  // URL de votre Nexus
-        NEXUS_REPOSITORY = "docker-hosted"     // Le repository Docker dans Nexus
-        NEXUS_CREDENTIAL_ID = "nexus-user-credentials" // L'ID des credentials Nexus
-        FRONTEND_IMAGE = "react-frontend"
-        BACKEND_IMAGE = "node-backend"
-    }
+   
 
     stages {
         stage("Clean up") {
@@ -47,29 +39,7 @@ pipeline {
             }
         }
 
-        stage("Push Frontend Image to Nexus") {
-            steps {
-                script {
-                    // Connexion à Nexus Docker Registry et push de l'image frontend
-                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
-                        sh "docker tag ${FRONTEND_IMAGE}:latest ${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
-                        sh "docker push ${NEXUS_REPOSITORY}/${FRONTEND_IMAGE}:latest"
-                    }
-                }
-            }
-        }
-
-        stage("Push Backend Image to Nexus") {
-            steps {
-                script {
-                    // Connexion à Nexus Docker Registry et push de l'image backend
-                    withDockerRegistry([credentialsId: "${NEXUS_CREDENTIAL_ID}", url: "${NEXUS_URL}"]) {
-                        sh "docker tag ${BACKEND_IMAGE}:latest ${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
-                        sh "docker push ${NEXUS_REPOSITORY}/${BACKEND_IMAGE}:latest"
-                    }
-                }
-            }
-        }
+       
 
         stage("Run Docker Compose") {
             steps {
