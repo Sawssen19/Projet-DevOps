@@ -5,8 +5,6 @@ pipeline {
         nodejs 'nodejs' // Configure Node.js dans Jenkins
     }
 
-   
-
     stages {
         stage("Clean up") {
             steps {
@@ -19,11 +17,10 @@ pipeline {
                 sh "git clone https://github.com/Sawssen19/Projet-DevOps.git"
             }
         }
-        
 
         stage("Build Frontend Image") {
             steps {
-                dir("Projet-DevOps/react-crud-web-api-master") { // Chemin ajusté pour le frontend
+                dir("Projet-DevOps/react-crud-web-api-master") {
                     sh "npm install"
                     sh "npm run build"
                     sh "docker build -t react-frontend:latest ."
@@ -33,9 +30,23 @@ pipeline {
 
         stage("Build Backend Image") {
             steps {
-                dir("Projet-DevOps/nodejs-express-sequelize-mysql-master") { // Chemin ajusté pour le backend
+                dir("Projet-DevOps/nodejs-express-sequelize-mysql-master") {
                     sh "npm install"
                     sh "docker build -t node-backend:latest ."
+                }
+            }
+        }
+
+        stage("SonarQube Analysis") {
+            steps {
+                withSonarQubeEnv('sonar-server') { // 'sonar-server' doit correspondre au nom dans la config Jenkins
+                    sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=Projet-DevOps \
+                        -Dsonar.sources=Projet-DevOps \
+                        -Dsonar.host.url=http://192.168.1.20:9000 \
+                        -Dsonar.login=sonar-token
+                    """
                 }
             }
         }
@@ -43,7 +54,7 @@ pipeline {
         stage("Run Docker Compose") {
             steps {
                 dir("Projet-DevOps") {
-                    sh "docker-compose up -d"  // Lancer Docker Compose pour déployer
+                    sh "docker-compose up -d"
                 }
             }
         }
