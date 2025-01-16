@@ -40,12 +40,13 @@ pipeline {
         stage("SonarQube Analysis") {
             steps {
                 withSonarQubeEnv('sonar-server') { // 'sonar-server' doit correspondre au nom dans la config Jenkins
-                    sh '/opt/sonar-scanner/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner \
-                        
+                    sh """
+                        /opt/sonar-scanner/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner \
                         -Dsonar.projectKey=Projet-DevOps \
                         -Dsonar.sources=Projet-DevOps \
                         -Dsonar.host.url=http://192.168.1.20:9000 \
-                        -Dsonar.login=sonar-token'
+                        -Dsonar.login=sonar-token
+                    """    
                 }
             }
         }
