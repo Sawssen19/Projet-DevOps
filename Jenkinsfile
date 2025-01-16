@@ -45,7 +45,7 @@ pipeline {
                         -Dsonar.projectKey=Projet-DevOps \
                         -Dsonar.sources=Projet-DevOps \
                         -Dsonar.host.url=http://192.168.1.20:9000 \
-                        -Dsonar.login=sonar-token
+                        -Dsonar.login=sqp_0d794c4cda10043d47ab8c3e4969ad448607ace9
                     """    
                 }
             }
